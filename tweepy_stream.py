@@ -66,7 +66,7 @@ if __name__ == '__main__':
     access_token_secret = 'g13Xf7ZQXBkmEiLukJfISRNz8bPHJXPPFY5XV4pHdBgn1'
 
     # Local connection
-    host = "127.0.0.1"  # Get local machine name (copy internal address from EC2 instance).
+    host = "172.31.46.37"  # Get local machine name (copy internal address from EC2 instance).
     port = 5555  # Reserve a port for your service.
 
     s = socket.socket()  # Create a socket object.
