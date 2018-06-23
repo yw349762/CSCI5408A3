@@ -9,6 +9,8 @@ import socket
 import json
 import re
 
+from tweepy import Stream
+
 
 class TwitterStreamListener(tweepy.StreamListener):
     """ A listener handles tweets are the received from the stream.
@@ -18,17 +20,21 @@ class TwitterStreamListener(tweepy.StreamListener):
     def __init__(self, sc):
         super(TwitterStreamListener, self).__init__()
         self.client_socket = sc
+        self.counter = 0
+        self.limit = 3000
 
     def on_status(self, status):
-        # print(status.text)
-        tweet = self.get_tweet(status)
-        # print(json.dumps(tweet).encode('utf-8'))
-        # self.client_socket.send((tweet[2]+"\n").encode('utf-8'))
         try:
             # self.client_socket.send("nessage")
             self.client_socket.send((tweet[2] + "\n").encode('utf-8'))
+            self.counter += 1
+            if self.counter < self.limit:
+                return True
+            else:
+                Stream.disconnect()
         except BaseException as e:
             print(e)
+            time.sleep(5)
         return True
 
     # Twitter error list : https://dev.twitter.com/overview/api/response-codes
@@ -87,4 +93,4 @@ if __name__ == '__main__':
 
     streamListener = TwitterStreamListener(c)
     myStream = tweepy.Stream(auth=api.auth, listener=streamListener, tweet_mode='extended')
-    myStream.filter(track=['movie', 'movies'], async=True)
+    myStream.filter(track=['movie', 'movies', 'music'], async=True)
