@@ -43,7 +43,7 @@ def do_something(time, rdd):
         linesDataFrame.createOrReplaceTempView("tweets")
 
         # Do tweet character count on table using SQL and print it
-        lineCountsDataFrame = spark.sql("select SentimentText, length(SentimentText) as TextLength from tweets limit 3")
+        lineCountsDataFrame = spark.sql("select SentimentText, length(SentimentText) as TextLength from tweets limit 3000")
         lineCountsDataFrame.show()
         lineCountsDataFrame.coalesce(1).write.format("com.databricks.spark.csv").save("dirwithcsv")
     except:
