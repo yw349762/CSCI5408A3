@@ -78,4 +78,6 @@ print("F1: %g" % (evaluator.evaluate(predictions)))
 # save the trained model for future use
 pipelineFit.save("logreg.model")
 
+#
+
 # PipelineModel.load("logreg.model")
