@@ -1,8 +1,9 @@
+import numpy
 from pyspark.sql import SQLContext
 from pyspark import SparkContext
 from pyspark.sql.functions import col
 
-from pyspark.ml.feature import RegexTokenizer, StopWordsRemover, CountVectorizer
+from pyspark.ml.feature import RegexTokenizer, StopWordsRemover, CountVectorizer, Word2Vec
 from pyspark.ml.classification import LogisticRegression
 
 from pyspark.ml import Pipeline
@@ -14,7 +15,7 @@ from pyspark.ml.evaluation import BinaryClassificationEvaluator,MulticlassClassi
 
 sc =SparkContext()
 sqlContext = SQLContext(sc)
-data = sqlContext.read.format('com.databricks.spark.csv').options(header='true', inferschema='true').load('train.csv')
+data = sqlContext.read.format('com.databricks.spark.csv').options(header='true', inferschema='true').load('1.csv')
 
 drop_list = ['ItemID']
 data = data.select([column for column in data.columns if column not in drop_list])
@@ -31,7 +32,6 @@ data.groupBy("SentimentText") \
     .count() \
     .orderBy(col("count").desc()) \
     .show()
-
 # set seed for reproducibility
 (trainingData, testData) = data.randomSplit([0.7, 0.3], seed = 100)
 print("Training Dataset Count: " + str(trainingData.count()))

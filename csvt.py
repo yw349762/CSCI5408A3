@@ -1,3 +1,4 @@
+from pyspark.ml.feature import CountVectorizer
 from pyspark.sql.functions import col
 from pyspark.sql import SQLContext, SparkSession
 from pyspark import SparkContext
@@ -12,7 +13,7 @@ ssc = StreamingContext(sc, 10)
 sqlContext = SQLContext(sc)
 # ssc.checkpoint( "file:/home/ubuntu/tweets/checkpoint/")
 
-socket_stream = ssc.socketTextStream("172.31.46.37", 5555)  # Internal ip of  the tweepy streamer
+socket_stream = ssc.socketTextStream("127.0.0.1", 5555)  # Internal ip of  the tweepy streamer
 
 lines = socket_stream.window(20)
 lines.pprint()
@@ -43,9 +44,12 @@ def do_something(time, rdd):
         linesDataFrame.createOrReplaceTempView("tweets")
 
         # Do tweet character count on table using SQL and print it
-        lineCountsDataFrame = spark.sql("select SentimentText, length(SentimentText) as TextLength from tweets limit 3000")
+        #lineCountsDataFrame = spark.sql("select SentimentText, length(SentimentText) as TextLength from tweets")
+        lineCountsDataFrame = spark.sql("select SentimentText from tweets")
         lineCountsDataFrame.show()
-        lineCountsDataFrame.coalesce(1).write.format("com.databricks.spark.csv").save("dirwithcsv")
+        #lineCountsDataFrame.coalesce(1).write.format("com.databricks.spark.csv").save("dirwithcsv")
+        #lineCountsDataFrame.write.coalesce(1).format("com.databricks.spark.csv").mode("append").save("dirwithcsv.csv")
+        lineCountsDataFrame.write.format("com.databricks.spark.csv").save("dirwithcsv")
     except:
         pass
 

@@ -20,21 +20,13 @@ class TwitterStreamListener(tweepy.StreamListener):
     def __init__(self, sc):
         super(TwitterStreamListener, self).__init__()
         self.client_socket = sc
-        self.counter = 0
-        self.limit = 3000
+
 
     def on_status(self, status):
-        try:
-            # self.client_socket.send("nessage")
-            self.client_socket.send((tweet[2] + "\n").encode('utf-8'))
-            self.counter += 1
-            if self.counter < self.limit:
-                return True
-            else:
-                Stream.disconnect()
-        except BaseException as e:
-            print(e)
-            time.sleep(5)
+        # print(status.text)
+        tweet = self.get_tweet(status)
+        # print(json.dumps(tweet).encode('utf-8'))
+        self.client_socket.send((tweet[2] + "\n").encode('utf-8'))
         return True
 
     # Twitter error list : https://dev.twitter.com/overview/api/response-codes
@@ -47,8 +39,10 @@ class TwitterStreamListener(tweepy.StreamListener):
 
     def get_tweet(self, tweet):
         text = tweet.text
+
         if hasattr(tweet, 'extended_tweet'):
             text = tweet.extended_tweet['full_text']
+
         return [str(tweet.user.id), tweet.user.screen_name, self.clean_str(text)]
 
     def clean_str(self, string):
@@ -72,7 +66,7 @@ if __name__ == '__main__':
     access_token_secret = 'g13Xf7ZQXBkmEiLukJfISRNz8bPHJXPPFY5XV4pHdBgn1'
 
     # Local connection
-    host = "172.31.46.37"  # Get local machine name (copy internal address from EC2 instance).
+    host = "127.0.0.1"  # Get local machine name (copy internal address from EC2 instance).
     port = 5555  # Reserve a port for your service.
 
     s = socket.socket()  # Create a socket object.
