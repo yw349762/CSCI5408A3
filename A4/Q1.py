@@ -1,34 +1,37 @@
-from pandas import read_csv
+from pylab import *
 import matplotlib.pyplot as plt
-from collections import Counter
+from pandas import read_csv
+from mpl_toolkits.basemap import Basemap
 
-results = Counter()
+# Data downloaded from 'http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_month.csv'
+# Setting up custom style
+style.use(['seaborn-poster'])
 
-data = read_csv('permittypecount.csv')
+quakeFrame = read_csv('permitcount.csv')
 
-#data['features'] = data.text.str.split()
+lngs = quakeFrame['XLOC'].astype('float')
+lats = quakeFrame['YLOC'].astype('float')
+mags = quakeFrame['COUNT(BP_ID)'].astype('float')
+#.apply(lambda x: 2 ** x)
 
-print(data['PERMIT_TYPE'])
 
-#data.features.apply(lambda x : results.update([e.strip(':,.').lower() for e in x if e.startswith('@') and len(e)>1]) )
-#print(results.most_common(20))
+plt.figure(figsize=(14, 8))
+earth = Basemap()
+# 105.3,-13.9,151.6,22.1 Phillipines
+# earth = Basemap(llcrnrlon=105.3,llcrnrlat=-13.9,urcrnrlon=151.6,urcrnrlat=22.1)
+earth.drawcoastlines(color='0.50', linewidth=0.25)
+#earth.fillcontinents(color='0.95')
+#earth.bluemarble(alpha=0.95)
+earth.shadedrelief()
+plt.scatter(lngs, lats, mags,
+            c='blue',alpha=0.5, zorder=10)
+plt.xlabel("Q1 plot the number of permits per location")
 
-res = results.most_common(20)
-
-# Create a new figure of size 10x6 points, using 100 dots per inch
-plt.figure(figsize=(10,6), dpi=100)
-plt.bar(x=[n*10 for n in range(1,21)],height=[b for a, b in res], facecolor='green', width=6, alpha=0.75)
-plt.xticks([n*10 for n in range(1,21)], [a for a, b in res],rotation=45, horizontalalignment='right')
-
-plt.xlabel('Mentions')
-plt.ylabel('Count')
-plt.title("Summary of mentions")
-plt.axis([0, 210, 0, 4000])
-plt.grid(True)
 
 # Workaround for blank image saving
 fig1 = plt.gcf()
 plt.show()
 plt.draw()
-fig1.savefig('mention_bp.png', dpi=200)
+fig1.savefig('Question1.png', dpi=350)
+
 

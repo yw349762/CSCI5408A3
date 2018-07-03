@@ -22,5 +22,5 @@ plt.title("Summary of community")
 ax.scatter(X, Y, Z)
 
 fig1 = plt.gcf()
-fig1.savefig('question5.png',dpi=48)
+fig1.savefig('Question5.png',dpi=48)
 plt.show()
