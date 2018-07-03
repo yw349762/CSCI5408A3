@@ -25,3 +25,5 @@ fig1 = plt.gcf()
 plt.show()
 plt.draw()
 fig1.savefig('Question3.png')
+
+
