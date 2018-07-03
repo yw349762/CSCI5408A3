@@ -1,1 +1,0 @@
-{"class":"org.apache.spark.ml.feature.RegexTokenizer","timestamp":1529871645124,"sparkVersion":"2.3.1","uid":"RegexTokenizer_4635bf6bcba7f9b93b6e","paramMap":{"pattern":"\\W","toLowercase":true,"minTokenLength":1,"gaps":true,"outputCol":"words","inputCol":"SentimentText"}}
