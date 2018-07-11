@@ -57,9 +57,9 @@ USING Outputters.Csv(outputHeader: true);
     SELECT 
     main AS Main_Street_Name,(SUM(hrvehiclevolume)) AS summary_vehicle,
     (SUM(hrpedestrianvolume)) AS summary_pedestrian,
-    DATEPART(weekday, countdate.Value) AS day_of_week
+    Convert.ToString(countdate.Value.DayOfWeek) AS day_of_week
     FROM @result
-    GROUP BY  DATEPART(weekday, countdate.Value),main
+    GROUP BY Convert.ToString(countdate.Value.DayOfWeek),main
     ORDER BY (SUM(hrvehiclevolume))+(SUM(hrpedestrianvolume)) DESC
     OFFSET 0 ROW;
 
@@ -70,11 +70,11 @@ USING Outputters.Csv(outputHeader: true);
 
 @rs4 =
     SELECT 
-    (SUM(hrvehiclevolume)) AS summary_vehicle,(SUM(hrpedestrianvolume)) AS summary_pedestrian,(countdate.Value.DayOfWeek) AS day_of_week
+    (SUM(hrvehiclevolume)) AS summary_vehicle,(SUM(hrpedestrianvolume)) AS summary_pedestrian,Convert.ToString(countdate.Value.DayOfWeek) AS day_of_week
     FROM @result
-    GROUP BY countdate.Value.DayOfWeek
+    GROUP BY Convert.ToString(countdate.Value.DayOfWeek)
     ORDER BY (SUM(hrvehiclevolume))+(SUM(hrpedestrianvolume)) DESC
-     FETCH 7 ROWS;
+    OFFSET 0 ROW;
 OUTPUT @rs4
 TO "assignment5/output/question4.csv"
 USING Outputters.Csv(outputHeader: true);
