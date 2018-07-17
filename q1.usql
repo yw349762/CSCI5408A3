@@ -1,0 +1,94 @@
+@searchlog =
+EXTRACT  tcs long,
+    main string,
+    midblock string,
+    side1 string,
+    side2 string, 
+    activationdate string, 
+    latitude double, 
+    longitude double,
+    countdate string,
+    hrvehiclevolume int,
+    hrpedestrianvolume int
+FROM "/assignment5/input/assignment5.csv" 
+USING Extractors.Csv(encoding: Encoding.UTF8,skipFirstNRows:1);
+OUTPUT @searchlog
+TO "assignment5/output/assignment5.csv" 
+USING Outputters.Csv(outputHeader: true);
+
+
+@result =
+SELECT  tcs,
+    main ,
+    midblock,
+    side1 ,
+    side2 , 
+    (
+            (Func<string, DateTime?>)
+            (dateString =>  // input_paramater
+                { 
+                    DateTime dateValue;
+                    return DateTime.TryParse(dateString, out dateValue) ? (DateTime?)dateValue : (DateTime?)null;
+                }
+             )
+        ) (activationdate) AS activationdate,
+    latitude , 
+    longitude ,
+    (
+            (Func<string, DateTime?>)
+            (dateString =>  // input_paramater
+                { 
+                    DateTime dateValue;
+                    return DateTime.TryParse(dateString, out dateValue) ? (DateTime?)dateValue : (DateTime?)null;
+                }
+             )
+        ) (countdate) AS countdate,
+    hrvehiclevolume ,
+    hrpedestrianvolume
+FROM @searchlog;
+
+OUTPUT @result
+TO "assignment5/output/assignment5output.csv" 
+USING Outputters.Csv(outputHeader: true);
+
+
+
+@rs5 =
+    SELECT 
+    main AS Main_Street_Name,(SUM(hrvehiclevolume)) AS summary_vehicle,
+    (SUM(hrpedestrianvolume)) AS summary_pedestrian,
+    Convert.ToString(countdate.Value.DayOfWeek) AS day_of_week
+    FROM @result
+    GROUP BY Convert.ToString(countdate.Value.DayOfWeek),main
+    ORDER BY (SUM(hrvehiclevolume))+(SUM(hrpedestrianvolume)) DESC
+    OFFSET 0 ROW;
+
+OUTPUT @rs5
+TO "assignment5/output/question5.csv"
+USING Outputters.Csv(outputHeader: true);
+
+
+@rs4 =
+    SELECT 
+    (SUM(hrvehiclevolume)) AS summary_vehicle,(SUM(hrpedestrianvolume)) AS summary_pedestrian,Convert.ToString(countdate.Value.DayOfWeek) AS day_of_week
+    FROM @result
+    GROUP BY Convert.ToString(countdate.Value.DayOfWeek)
+    ORDER BY (SUM(hrvehiclevolume))+(SUM(hrpedestrianvolume)) DESC
+    OFFSET 0 ROW;
+OUTPUT @rs4
+TO "assignment5/output/question4.csv"
+USING Outputters.Csv(outputHeader: true);
+
+
+
+
+@rs1 =
+    SELECT AVG(hrvehiclevolume) AS average_volume_of_vehicles,main AS Main_Street_Name
+    FROM @result
+    GROUP BY main;
+OUTPUT @rs1
+TO "assignment5/output/question1.csv"
+USING Outputters.Csv(outputHeader: true);
+
+
+
