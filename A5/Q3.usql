@@ -1,0 +1,26 @@
+@searchlog =
+EXTRACT  tcs long,
+    main string,
+    midblock string,
+    side1 string,
+    side2 string, 
+    activationdate string, 
+    latitude double, 
+    longitude double,
+    countdate DateTime,
+    hrvehiclevolume int,
+    hrpedestrianvolume int
+FROM "/assignment5/input/assignment5.csv" 
+USING Extractors.Csv(encoding: Encoding.UTF8,skipFirstNRows:1);
+OUTPUT @searchlog
+TO "assignment5/output/assignment5.csv" 
+USING Outputters.Csv(outputHeader: true);
+
+
+@rs3 =
+  SELECT countdate.Year, SUM(hrvehiclevolume) AS sum_vehicle, SUM(hrpedestrianvolume) AS sum_predestrian
+  FROM @searchlog 
+  GROUP BY countdate.Year;
+  OUTPUT @rs3   
+  TO "assignment5/output/question3.csv" 
+  USING Outputters.Csv(outputHeader: true);
