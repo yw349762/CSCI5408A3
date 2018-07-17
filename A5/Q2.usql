@@ -1,0 +1,28 @@
+@searchlog =
+EXTRACT  tcs long,
+    main string,
+    midblock string,
+    side1 string,
+    side2 string, 
+    activationdate string, 
+    latitude double, 
+    longitude double,
+    countdate DateTime,
+    hrvehiclevolume int,
+    hrpedestrianvolume int
+FROM "/assignment5/input/assignment5.csv" 
+USING Extractors.Csv(encoding: Encoding.UTF8,skipFirstNRows:1);
+OUTPUT @searchlog
+TO "assignment5/output/assignment5.csv" 
+USING Outputters.Csv(outputHeader: true);
+
+
+@rs2 =
+  SELECT main + midblock + side1+ side2 AS the_location, latitude, longitude, countdate, hrvehiclevolume + hrpedestrianvolume AS totalvolume 
+  FROM @searchlog 
+  WHERE countdate >= DateTime.Parse("2013-01-01")
+  ORDER BY totalvolume DESC
+  FETCH 10 ROWS;
+  OUTPUT @rs2   
+  TO "assignment5/output/question2.csv" 
+  USING Outputters.Csv(outputHeader: true);
