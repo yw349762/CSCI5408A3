@@ -5,6 +5,7 @@ import pandas as pd
 from sklearn import linear_model
 from sklearn.cross_validation import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer, TfidfTransformer
+from sklearn.feature_selection import SelectKBest, chi2
 from sklearn.metrics import classification_report
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.pipeline import Pipeline
@@ -38,20 +39,24 @@ dnpd1 = np.array(data1.iloc[:, 1])
 
 pipeline1 = Pipeline([
     ('vect', CountVectorizer()),
+    ('feature_selection',SelectKBest(score_func=chi2, k=9)),
     ('clf', LinearSVC()),
 ])
 pipeline2 = Pipeline([
     ('vect', CountVectorizer()),
+    ('feature_selection',SelectKBest(score_func=chi2, k=9)),
     ('clf', linear_model.LogisticRegression()),
 ])
 
 pipeline3 = Pipeline([
     ('vect', CountVectorizer()),
+    ('feature_selection',SelectKBest(score_func=chi2, k=9)),
     ('clf', DecisionTreeClassifier()),
 ])
 
 pipeline4 = Pipeline([
     ('vect', CountVectorizer()),
+    ('feature_selection',SelectKBest(score_func=chi2, k=9)),
     ('clf', MultinomialNB()),
 ])
 

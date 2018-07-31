@@ -8,6 +8,7 @@ import itertools
 
 from sklearn.cross_validation import train_test_split
 from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_selection import SelectFromModel, SelectKBest, chi2
 from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.pipeline import Pipeline
@@ -51,20 +52,24 @@ class_names =["bg","mk","bs","hr","sr","sk","es-AR","es-ES","pt-BR","pt-PT","id"
 
 pipeline1 = Pipeline([
     ('vect', CountVectorizer()),
+    ('feature_selection',SelectKBest(score_func=chi2, k=9)),
     ('clf', LinearSVC()),
 ])
 pipeline2 = Pipeline([
     ('vect', CountVectorizer()),
+    ('feature_selection',SelectKBest(score_func=chi2, k=9)),
     ('clf', linear_model.LogisticRegression()),
 ])
 
 pipeline3 = Pipeline([
     ('vect', CountVectorizer()),
+    ('feature_selection',SelectKBest(score_func=chi2, k=9)),
     ('clf', DecisionTreeClassifier()),
 ])
 
 pipeline4 = Pipeline([
     ('vect', CountVectorizer()),
+    ('feature_selection',SelectKBest(score_func=chi2, k=9)),
     ('clf', MultinomialNB()),
 ])
 
