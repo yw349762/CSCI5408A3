@@ -1,0 +1,9 @@
+# example query command 
+python Exporter.py --querysearch "show halifax" --since 2015-05-01 --until 2015-10-31 --maxtweets 2000 --output 'show/2015showsummer.csv'
+python Exporter.py --querysearch "jazz halifax" --since 2013-05-01 --until 2013-10-31 --maxtweets 2000 --output 'music/detailjazz/2013jazzmusicsummer.csv'
+python Exporter.py --querysearch "rock halifax" --since 2013-11-01 --until 2014-04-30 --maxtweets 2000 --output 'music/detailrockwinter/2013jrockmusicwinter.csv'
+python Exporter.py --querysearch "rap halifax" --since 2013-11-01 --until 2014-04-30 --maxtweets 2000 --output 'music/detailrapwinter/2013rapmusicwinter.csv'
+python Exporter.py --querysearch "r&b halifax" --since 2013-11-01 --until 2014-04-30 --maxtweets 2000 --output 'music/detailr&bwinter/2013r&bmusicwinter.csv'
+python Exporter.py --querysearch "rock music halifax" --since 2013-05-01 --until 2013-10-31 --maxtweets 2000 --output 'music/detailrocksummer/2013rockmusicsummer.csv'
+python Exporter.py --querysearch "Citadel Hill" --since 2013-05-01 --until 2013-10-31 --maxtweets 2000 --output 'visitor/detailhillsummer/2013citadelhillvistorsummer.csv'
+python Exporter.py --querysearch "Citadel Hill" --since 2013-11-01 --until 2014-04-30 --maxtweets 2000 --output 'visitor/detailhillwinter/2013citadelhillvistorwinter.csv'
